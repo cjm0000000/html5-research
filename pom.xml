@@ -74,7 +74,7 @@
 				<version>3.1</version>
 				<configuration>
 					<source>${java-version}</source>
-					<target>1${java-version}</target>
+					<target>${java-version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
