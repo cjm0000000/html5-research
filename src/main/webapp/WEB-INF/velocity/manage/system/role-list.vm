@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="#{getContextPath}bootstrap/plugins/modal/css/bootstrap-modal-bs3patch.css">
+<link rel="stylesheet" href="#{getContextPath}bootstrap/plugins/modal/css/bootstrap-modal.css">
+<div class="col-md-9" role="main">
+	<div class="panel panel-default">
+		### 顶部按钮栏
+		<div class="panel-heading">
+			<button id="role-add" type="button" class="role btn btn-success btn-md" >
+				<span class="glyphicon glyphicon-plus-sign"></span> 添 加
+			</button>
+			<button id="role-update" type="button" disabled class="role btn btn-info btn-md" >
+				<span class="glyphicon glyphicon-edit"></span> 编 辑
+			</button>
+			<button id="role-delete" type="button" disabled class="btn btn-danger btn-md" >
+				<span class="glyphicon glyphicon-trash"></span> 删 除
+			</button>
+		</div>
+			
+		### 数据表
+		<table class="table">
+			<thead>
+				<tr>
+					<th width="5%"><input type="checkbox" title="全选" onclick="checkList(this,'role_id');btnListener('role_id',$('#role-update'),$('#role-delete'));"/></th>
+					<th width="30%">角色名</th>
+		            <th width="45%">描述</th>
+		            <th width="10%">排序号</th>
+		            <th width="10%" style="text-align:center;">权限设置</th>
+				</tr>
+			</thead>
+			<tbody>
+			#foreach($role in $list)
+				#if($velocityCount%4==0)
+					<tr class="warning">
+				#end
+				#if($velocityCount%4==1)
+					<tr>
+				#end
+				#if($velocityCount%4==2)
+					<tr class="success">
+				#end
+		    		<td><input type="checkbox" value="$!role.role_id" name="role_id" onclick="btnListener('role_id',$('#role-update'),$('#role-delete'));"/></td>
+		       		<td>$!role.role_name</td>
+		  			<td>$!role.role_desc</td>
+		  			<td>$!role.sort</td>
+		  			<td style="text-align:center;">
+		  				<button data-toggle="tooltip" title="点击设置$!role.role_name权限" value="$!role.role_id" type="button" class="authority-list btn btn-info btn-xs" >
+							<span class="glyphicon glyphicon-edit"></span>
+						</button>
+		  			</td>
+		   		</tr>
+			#end
+			</tbody>
+		</table>
+		### 分页栏
+		#createPagination($pg.currentPage,$pg.pageSize,$pg.resCount)
+	</div>
+</div>
+<div id="role-ajax-modal" class="modal fade" tabindex="-1" style="display: none;"></div>
+<div id="role-confirm-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-body">
+    <h4>你确定要删除所选的角色吗？</h4>
+  </div>
+  <div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-success">取消</button>
+    <button type="button" data-dismiss="modal" class="confirm-delete btn btn-danger"><span class="glyphicon glyphicon-trash"></span> 确认删除</button>
+  </div>
+</div>
+<script src="#{getContextPath}bootstrap/plugins/modal/js/bootstrap-modalmanager.js"></script>
+<script src="#{getContextPath}bootstrap/plugins/modal/js/bootstrap-modal.js"></script>
+<script src="#{getContextPath}js/mmt.js"></script>
+<script src="#{getContextPath}js/modal_tips_init.js"></script>
+<script src="#{getContextPath}js/manage/system/role.js"></script>
+<script type="text/javascript">
+var url_showAuthorityPage 	= "#{getContextPath}webservices/system/role/authority-list-page";
+var url_authoritySet= "#{getContextPath}webservices/system/role/set-authority";
+var url_showPage 	= "#{getContextPath}webservices/system/role/add-edit-page";
+var url_save 		= "#{getContextPath}webservices/system/role/save";
+var url_delete 		= "#{getContextPath}webservices/system/role/delete";
+$('.authority-list').tooltip();
+</script>
