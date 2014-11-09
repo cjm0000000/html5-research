@@ -17,7 +17,7 @@ $(function() {
                     $('#saveOrder').attr('disabled',false);
                 }
             }
-        })
+        });
     });
 });
 

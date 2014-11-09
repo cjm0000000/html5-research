@@ -58,8 +58,48 @@
 之间的区别可以看[一篇StackOverFlow上的文章](http://stackoverflow.com/questions/2268276/what-are-the-key-differences-between-javascript-and-actionscript-3)。
 
 ### JS编码规范
+建议参考谷歌的规范：[Google JavaScript Style Guide](http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml).
+
+这里讲的比较全面了。
 
 ### jQuery
+几乎任何项目都可以用jQuery。目前最新版`1.11.1`不到100KB，可称得上小巧了。jQuery在DOM操作上很方便，有非常丰富的selector。对于重量型的富客户端项目也可以用`jQuery-EasyUI`来取代`ExtJS`。
+
+#### 详细的API
+jQuery的[API](http://api.jquery.com/)写的非常详尽，每个函数除了说明外，还会带上示例代码，帮助我们更好地理解。
+#### 强大的Selector
+jQuery具备非常强大的DOM选择器，我们可以根据ID, CSS, XPATH等来操作DOM节点，我们可以用各种方式获取到下面的DIV。
+
+    <div id="id" name="name" class="div-wrap"></div>
+
+- by ID        $('#id')  
+- by CSS       $('.div-wrap')  
+- by XPATH     $("div[name='name']")  
+
+#### 方便的AJAX操作
+- GET  
+    var jqxhr = $.get( "example.php", function() {
+        alert( "success" );
+    }).done(function() {
+        alert( "second success" );
+    }).fail(function() {
+        alert( "error" );
+    }).always(function() {
+        alert( "finished" );
+    });
+
+- POST  
+    $.post( "example.php", function() {
+        alert( "success" );
+    }).done(function() {
+        alert( "second success" );
+    }).fail(function() {
+        alert( "error" );
+    }).always(function() {
+        alert( "finished" );
+    });
+
+- Ajax Form（需要`jquery.form`插件）
 
 ### 后端选型
 
