@@ -150,3 +150,199 @@ Java世界比较出名的两种模板技术是[Velocity](http://velocity.apache.
 为了简化，这里把持久化以及复杂的业务逻辑省略了。
 本着研究的目的，这里选择了Spring4.1.1作为核心框架（包含Ioc + MVC），采用`Velocity`作为模板引擎，`Bootstrap`和`jQuery`作为页面交互组件。实现一个很简单的页面：订单提交。
 
+#### HTML页面结构
+    <!DOCTYPE html>
+    <html lang="cn">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="green120@126.com">
+    <title>在线下单</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/bootstrap/css/sticky-footer-navbar.css">
+    <style>
+        .json-result {
+            width: 400px;
+            height: 60px;
+            display: block;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            margin-left: -200px;
+            margin-top: -30px;
+        }
+    </style>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/bootstrap/assets/js/html5shiv.js"></script>
+    <script src="/bootstrap/assets/js/respond.min.js"></script>
+    <![endif]-->
+    </head>
+    <body style="padding-top: 70px;">
+    <div id="wrap" class="page-container">
+    ### 顶部导航模板
+    #parse("nav-bar.vm")
+
+    ### 面包屑导航模板
+    #parse("breadcrumb-nav.vm")
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/bootstrap/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    ### Main模板
+    #parse("${mainViewName}.vm")
+    </div>
+    <!-- /container -->
+
+    ### 底部模板
+    #include("footer.vm")
+    </body>
+    </html>
+
+所有的页面都按照这个模板来生成（此模板根据Bootstrap的资源构建）。这个模板包含了4个子模板：顶部的导航模板、面包屑导航模板、Main模板以及底部模板。我们最需要关注的时Main模板，通过动态加载Main模板，来帮助我么用这个模板加载不同的页面。
+
+#### 显示订单提交页面
+这个页面本来是个静态的HTML页面，但是这里为了简单说明另外一个问题——如何把后端数据展示给用户。就先从后端读取订单数据，填充到表单。  
+后端代码（`RoleAction`）如下：  
+
+    @RequestMapping(value = "show", method = RequestMethod.GET)
+    public ModelAndView showOrder() {
+        String templateName = "order";
+        Order order = createOrder();
+        ModelAndView mv = new ModelAndView("index", "mainViewName", templateName);
+        mv.addObject("model", order);
+        return mv;
+    }
+关键点：通过配置的`mainViewName`来找到对应的模板文件。
+
+前端模板代码（`order.vm`）如下：
+
+    <link rel="stylesheet" href="/bootstrap/plugins/select/css/bootstrap-select.min.css">
+    <div class="container">
+    <h3>寄 件</h3>
+    <div class="well" id="orderForm">
+        <h4>寄件人信息</h4>
+        <hr/>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="sendName" class="col-md-1 control-label">姓 名</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="sendName" name="sender.name" value="$!model.sender.name" placeholder="寄件人姓名">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sendPhone" class="col-md-1 control-label">手机/固话</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="sendPhone" name="sender.phone" value="$!model.sender.phone" placeholder="寄件人手机号码或者固话">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sendAddr" class="col-md-1 control-label">上门地址</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="sendAddr" name="sender.addr" value="$!model.sender.addr" placeholder="上门收件地址">
+                </div>
+            </div>
+            <h4>收件人信息</h4>
+            <hr/>
+            <div class="form-group">
+                <label for="recvName" class="col-md-1 control-label">姓 名</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="recvName" name="recver.name" value="$!model.recver.name" placeholder="收件人姓名">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="recvPhone" class="col-md-1 control-label">手机/固话</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="recvPhone" name="recver.phone" value="$!model.recver.phone" placeholder="收件人手机号码或者固话">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="recvAddr" class="col-md-1 control-label">收货地址</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="recvAddr" name="recver.addr" value="$!model.recver.addr" placeholder="收件人地址">
+                </div>
+            </div>
+            <h4>物品信息</h4>
+            <hr/>
+            <div class="form-group">
+                <label for="weight" class="col-md-1 control-label">重 量</label>
+                <div class="col-md-2">
+                    <select class="selectpicker" id="weight" name="goods.weight" value="$!model.goods.weight" data-width="100%">
+                        <option value="1" selected> 1公斤以下 </option>
+                        <option value="2"> 1-5公斤</option>
+                        <option value="3"> 5公斤以上 </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input name="goods.sign" value="1" type="checkbox"> 我的货物不重，但是体积很大
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-md-10">
+                    <button class="btn btn-success" id="saveOrder">确认下单</button>
+                    <button type="reset" class="btn btn-danger">重 置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    <script src="/bootstrap/plugins/select/js/bootstrap-select.min.js"></script>
+    <script src="/js/plugins/jquery.form.min.js"></script>
+    <script src="/js/order.js"></script>
+    <script>
+    $('select').selectpicker();
+    </script>
+
+这个页面其实是一个加入Bootstrap样式的HTML脚本，中间嵌入了一些Velocity脚本。
+
+通过jQuery（`order.js`）来交互：
+
+    $("#saveOrder").on('click', function(){
+        $('#saveOrder').attr('disabled',true);
+        $('.form-horizontal').ajaxSubmit({
+            url: '/orders/create',
+            type: 'post',
+            success: function(responseText){
+                var res = $.parseJSON(responseText);
+                if(res.success){
+                    var form = $("#orderForm");
+                    form.empty();
+                    form.append(res.msg);
+                }else{
+                    cleanErrorCss();
+                    $("input[name='"+ res.field +"']").parent().parent().addClass('has-error');
+                    $('#saveOrder').attr('disabled',false);
+                }
+            }
+        });
+    });
+
+通过Ajax方式提交表单到后端接口`orders/create`。
+
+后端如何处理：
+
+    @RequestMapping(value = "create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String create(@Valid Order order, BindingResult br) {
+        if (br.hasErrors()) {
+            return validateError(br.getFieldError().getField(), br.getFieldError().getDefaultMessage());
+        }
+        // 这里省略N行。。。
+        return info("下单成功。");
+    }
+    
+后端采用JSON和前端通信，这个方法还做了简单的Validation（`JSR-303/JSR-349 Bean Validation`）。
+
+PS：所有实例代码都可以在当前工程找到。
+
+### 自动化测试
+待续……
