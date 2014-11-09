@@ -11,7 +11,11 @@
   http://www.springframework.org/schema/mvc
   http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd ">
   	<mvc:annotation-driven />
-	<context:component-scan base-package="com.github.cjm0000000.mmt.web" />
+    <mvc:resources mapping="/bootstrap/**" location="/bootstrap/"/>
+    <mvc:resources mapping="/images/**" location="/images/"/>
+    <mvc:resources mapping="/js/**" location="/js/"/>
+    <mvc:default-servlet-handler/>
+	<context:component-scan base-package="com.github.cjm0000000.h5" />
 	<!-- Velocity 配置 -->
 	<bean id="velocityConfigurer"
 		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">

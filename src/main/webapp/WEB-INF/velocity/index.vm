@@ -1,111 +1,50 @@
 <!DOCTYPE html>
 <html lang="cn">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MMT Smart Robot">
     <meta name="author" content="green120@126.com">
-    <link rel="shortcut icon" href="#{getContextPath}images/favicon.png">
-
-    <title>MMT Smart Robot</title>
+    <title>在线下单</title>
 
     <!-- Bootstrap core CSS -->
-	<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"> -->
-	<link href="#{getContextPath}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <!-- Custom styles for this template -->
-    
-
+    <link rel="stylesheet" href="/bootstrap/css/sticky-footer-navbar.css">
+    <style>
+        .json-result {
+            width: 400px;
+            height: 60px;
+            display: block;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            margin-left: -200px;
+            margin-top: -30px;
+        }
+    </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="#{getContextPath}bootstrap/assets/js/html5shiv.js"></script>
-      <script src="#{getContextPath}bootstrap/assets/js/respond.min.js"></script>
+    <script src="/bootstrap/assets/js/html5shiv.js"></script>
+    <script src="/bootstrap/assets/js/respond.min.js"></script>
     <![endif]-->
-  </head>
+</head>
+<body style="padding-top: 70px;">
+<div id="wrap" class="page-container">
+### 顶部导航模板
+    #parse("nav-bar.vm")
 
-  <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#getContextPath">MMT Smart Robot</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="#contact">联系我们</a></li>
-            #if($user_token)
-            	<li class="dropdown">
-	              <a href="#" class="dropdown-toggle" data-toggle="dropdown">$!user_token.username<b class="caret"></b></a>
-	              <ul class="dropdown-menu">
-	                <li><a href="#">账户设置</a></li>
-	                <li><a href="#">我的服务</a></li>
-	                #if($user_token.role_id != 3 )
-	                <li class="divider"></li>
-	                <li class="dropdown-header">管理员入口</li>
-	                <li><a href="#{getContextPath}webservices/$!CUSTOMIZATION_HOME">系统管理</a></li>
-	                #end
-	              </ul>
-	            </li>
-            	<li><a href="#{getContextPath}webservices/logout">登 出</a></li>
-            #end
-          </ul>
-		#if(!$user_token)
-			<form method="post" action="#{getContextPath}mmt_auth_center" class="navbar-form navbar-right">
-	            <div class="form-group">
-	              <input type="text" name="username" placeholder="用户名" class="form-control">
-	            </div>
-	            &nbsp;<div class="form-group">
-	              <input type="password" name="password" placeholder="密 码" class="form-control">
-	            </div>
-	            &nbsp;<button type="submit" class="btn btn-success">登 录</button>
-          	</form>
-		#end
-          
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
+### 面包屑导航模板
+    #parse("breadcrumb-nav.vm")
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>你好，世界！</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-      </div>
-    </div>
+    <!-- Bootstrap core JavaScript -->
+    <script src="/bootstrap/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+### Main模板
+    #parse("${mainViewName}.vm")
+</div>
+<!-- /container -->
 
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
-
-      <hr>
-
-    </div> <!-- /container -->
-	#include("footer.vm")
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="#{getContextPath}bootstrap/assets/js/jquery-1.10.2.min.js"></script>
-    <script src="#{getContextPath}bootstrap/js/bootstrap.min.js"></script>
-  </body>
+### 底部模板
+    #include("footer.vm")
+</body>
 </html>
