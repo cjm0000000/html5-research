@@ -78,6 +78,7 @@ jQuery具备非常强大的DOM选择器，我们可以根据ID, CSS, XPATH等来
 
 #### 方便的AJAX操作
 - GET  
+- 
     var jqxhr = $.get( "example.php", function() {
         alert( "success" );
     }).done(function() {
@@ -89,6 +90,7 @@ jQuery具备非常强大的DOM选择器，我们可以根据ID, CSS, XPATH等来
     });
 
 - POST  
+- 
     $.post( "example.php", function() {
         alert( "success" );
     }).done(function() {
@@ -100,10 +102,51 @@ jQuery具备非常强大的DOM选择器，我们可以根据ID, CSS, XPATH等来
     });
 
 - Ajax Form（需要`jquery.form`插件）
+- 
+    $('.form-horizontal').ajaxSubmit({
+        url: '/orders/create',
+        type: 'post',
+        success: function(responseText){
+            var res = $.parseJSON(responseText);
+            if(res.success){
+                var form = $("#orderForm");
+                form.empty();
+                form.append(res.msg);
+            }else{
+                cleanErrorCss();
+                $("input[name='"+ res.field +"']").parent().parent().addClass('has-error');
+                $('#saveOrder').attr('disabled',false);
+            }
+        }
+    });
+
+#### 丰富的插件
+http://plugins.jquery.com/
+
+### Bootstrap
+[Bootstrap](https://github.com/twbs/bootstrap)是Twitter开源的CSS框架。它在GitHub的收藏数超过了7万，非常热门。通过Bootstrap我们可以快速地构建风格统一的HTML5页面。  
+Bootstrap也具备非常完整的文档：[English](http://getbootstrap.com/getting-started/)、[中文](http://v3.bootcss.com/)。
+
+#### 丰富的插件
+Bootstrap本身提供了不多的功能，要实现一些酷炫的效果，需要借助一些第三方插件，以下是我用到的一些插件：  
+- [select](https://github.com/silviomoreto/bootstrap-select)  
+- [switch](https://github.com/nostalgiaz/bootstrap-switch)  
+- [model](https://github.com/jschr/bootstrap-modal)  
+- [datetimepicker](https://github.com/tarruda/bootstrap-datetimepicker)  
 
 ### 后端选型
+对于后端选型，要求能够方便返回JSON，也能方便返回HTML，很多MVC框架都能胜任。这里会推荐Spring自家的MVC框架——[SpringMVC](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html)。个人觉得它功能强大，优雅并且简单。
 
-#### JSON还是template？
+#### 返回JSON（Ajax）还是返回HTML
+根据应用场景，个人建议交互不强的页面用HTML，交互强的用Ajax。
 
+#### JSP还是模板
+JSP固然是最简单的，但是个人觉得也最容易把代码写烂，所以我不推荐JSP。用模板技术，虽然增加一些学习成本，但是等掌握了模板以后会更加高效，并且代码容易保持简洁。  
+Java世界比较出名的两种模板技术是[Velocity](http://velocity.apache.org/)和[FreeMarker](http://freemarker.org/)。在这两者之间如何做选择，其实不那么重要，选一种深入学习即可。
 
+### 一个简单的案例
+
+#### 选型
+为了简化，这里把持久化以及复杂的业务逻辑省略了。
+本着研究的目的，这里选择了Spring4.1.1作为核心框架（包含Ioc + MVC），采用`Velocity`作为模板引擎，`Bootstrap`和`jQuery`作为页面交互组件。实现一个很简单的页面：订单提交。
 
