@@ -1,6 +1,7 @@
 package com.github.cjm0000000.h5.action;
 
 import com.alibaba.fastjson.JSON;
+import com.github.cjm0000000.h5.aop.MethodMonitor;
 import com.github.cjm0000000.h5.model.Goods;
 import com.github.cjm0000000.h5.model.Order;
 import com.github.cjm0000000.h5.model.User;
@@ -26,6 +27,7 @@ import java.util.UUID;
 public class OrderAction {
 
     @RequestMapping(value = "show", method = RequestMethod.GET)
+    @MethodMonitor
     public ModelAndView showOrder() {
         String templateName = "order";
         Order order = createOrder();
@@ -59,6 +61,7 @@ public class OrderAction {
 
     @RequestMapping(value = "create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
     @ResponseBody
+    @MethodMonitor
     public String create(@Valid Order order, BindingResult br) {
         if (br.hasErrors()) {
             return validateError(br.getFieldError().getField(), br.getFieldError().getDefaultMessage());
